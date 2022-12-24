@@ -8,7 +8,7 @@ function* MovieListSaga(action) {
     const movieDetail = yield call(getMovieDetails);
     yield put({
       type: types.MOVIES_LIST_SUCCESS,
-      universityDetails: movieDetail.data,
+      movieDetails: movieDetail.data,
     });
   } catch (e) {
     yield put({ type: types.MOVIES_LIST_ERROR, message: e.message });
