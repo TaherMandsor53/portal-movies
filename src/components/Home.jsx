@@ -1,42 +1,53 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMovieDetails } from '../action/action';
-import Select from 'react-select';
-import searchIcon from '../assets/search-icon.svg';
-import closeIcon from '../assets/closeIcon.svg';
+import { SearchBox, initializeIcons, Dropdown } from '@fluentui/react';
+import { dropdownOptions } from '../constants/constants';
+import Table from './table/Table';
+import LoaderImg from '../assets/loader.svg';
 
 export default function Home() {
+  initializeIcons();
   const dispatch = useDispatch();
   const [searchVal, setSearchVal] = useState('');
-  const selectOptions = [
-    { value: 'episode', label: 'Episode' },
-    { value: 'year', label: 'Year' },
-  ];
+  const [dropVal, setDropVal] = useState('');
+
   useEffect(() => {
     dispatch(getMovieDetails());
   }, [dispatch]);
 
-  const onSearchChange = useCallback(e => {
-    setSearchVal(e.target.value);
+  const onSearchChange = useCallback(searchText => {
+    setSearchVal(searchText);
   }, []);
 
-  const onClearClick = () => {
-    setSearchVal('');
+  const onDropdownChange = (e, item) => {
+    console.log({ item });
   };
 
   const getMovieList = useSelector(state => state?.getMovieListReducer?.movieDetails?.results);
+  const isLoading = useSelector(state => state?.getMovieListReducer?.isFetching);
   console.log({ getMovieList });
   return (
     <div className="home-main">
       <div className="home-header">
-        <Select options={selectOptions} className="select-comp" />
-
-        <div className="input-main">
-          <img src={searchIcon} alt="search-icon" />
-          <input className="input-comp" onChange={onSearchChange} value={searchVal} />
-          {searchVal && <img src={closeIcon} alt="close-icon" className="close-img" onClick={onClearClick} />}
-        </div>
+        <Dropdown
+          options={dropdownOptions}
+          className="dropdown-comp"
+          placeholder="Sort By..."
+          value={dropVal}
+          onChange={onDropdownChange}
+        />
+        <SearchBox placeholder="Type to search..." onSearch={onSearchChange} className="search-box" />
       </div>
+
+      {isLoading ? (
+        <img src={LoaderImg} alt="loader-img" className="loader-img" />
+      ) : (
+        <div className="movie-detail-section">
+          {getMovieList && getMovieList.length > 0 && <Table data={getMovieList} />}
+          <div className="no-movie-info">no movie selected</div>
+        </div>
+      )}
     </div>
   );
 }

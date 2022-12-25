@@ -4,32 +4,34 @@
     background: #eeeeee;
     display: flex;
     gap: 20px;
-    .input-main {
-      border: 1px solid #ddd;
-      display: flex;
-      border-radius: 5px;
-      padding: 10px;
-      background: #fff;
-      width: 100%;
-      justify-content: space-between;
-      .input-comp,
-      .input-comp:focus-visible {
-        border: none;
-        outline: none;
-        height: 15px;
-        padding-left: 10px;
-        font-size: 16px;
-        letter-spacing: 1px;
-        width: 100%;
-      }
-      img {
-        width: 18px;
-        height: 18px;
-        cursor: pointer;
-      }
-    }
-    .select-comp {
+    .dropdown-comp {
       width: 180px;
+      .ms-Dropdown-title {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
     }
+    .search-box {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+  }
+  .movie-detail-section {
+    height: 100%;
+    display: flex;
+    .no-movie-info {
+      border-left: 1px solid #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50%;
+    }
+  }
+  .loader-img {
+    position: absolute;
+    left: 45%;
+    top: 30%;
+    width: 120px;
   }
 }
