@@ -17,17 +17,6 @@
       border-radius: 5px;
     }
   }
-  .movie-detail-section {
-    height: 100%;
-    display: flex;
-    .no-movie-info {
-      border-left: 1px solid #eee;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 50%;
-    }
-  }
   .loader-img {
     position: absolute;
     left: 45%;

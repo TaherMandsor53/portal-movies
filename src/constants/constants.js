@@ -39,3 +39,5 @@ export const columnList = [
     fieldName: 'releaseDate',
   },
 ];
+
+export const filterColumns = ['episodeId', 'title', 'releaseDate'];

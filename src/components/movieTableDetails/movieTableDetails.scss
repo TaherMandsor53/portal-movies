@@ -1,0 +1,18 @@
+.movie-detail-section {
+  display: flex;
+  height: calc(100vh - 62px);
+  .movie-details {
+    border-left: 1px solid #cccccc;
+    width: 50%;
+    padding: 20px;
+  }
+  .no-movie-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  .movie-description {
+    padding-bottom: 20px;
+  }
+}

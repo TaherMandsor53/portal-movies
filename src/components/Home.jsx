@@ -2,31 +2,63 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMovieDetails } from '../action/action';
 import { SearchBox, initializeIcons, Dropdown } from '@fluentui/react';
-import { dropdownOptions } from '../constants/constants';
-import Table from './table/Table';
+import { dropdownOptions, filterColumns } from '../constants/constants';
+import MovieTableDetails from './movieTableDetails/MovieTableDetails';
 import LoaderImg from '../assets/loader.svg';
+import { filterTableData } from '../constants/transform';
 
 export default function Home() {
   initializeIcons();
   const dispatch = useDispatch();
   const [searchVal, setSearchVal] = useState('');
   const [dropVal, setDropVal] = useState('');
+  const [tableData, setTableData] = useState('');
 
   useEffect(() => {
     dispatch(getMovieDetails());
   }, [dispatch]);
 
-  const onSearchChange = useCallback(searchText => {
-    setSearchVal(searchText);
-  }, []);
-
-  const onDropdownChange = (e, item) => {
-    console.log({ item });
-  };
-
   const getMovieList = useSelector(state => state?.getMovieListReducer?.movieDetails?.results);
   const isLoading = useSelector(state => state?.getMovieListReducer?.isFetching);
-  console.log({ getMovieList });
+  const transformTableData = filterTableData(getMovieList);
+
+  const onSearchChange = useCallback(
+    (e, searchText) => {
+      const lowercasedValue = searchText.toLowerCase().trim();
+      setSearchVal(lowercasedValue);
+      if (lowercasedValue === '') {
+        setTableData(transformTableData);
+      } else {
+        const filteredData =
+          transformTableData &&
+          transformTableData.length > 0 &&
+          transformTableData.filter(item => {
+            return Object.keys(item).some(key =>
+              filterColumns.includes(key) ? item[key].toString().toLowerCase().includes(lowercasedValue) : false,
+            );
+          });
+        setTableData(filteredData);
+      }
+    },
+    [transformTableData],
+  );
+
+  const onDropdownChange = (e, item) => {
+    setDropVal(item);
+    let sortedData = '';
+    if (item?.key === 'episode') {
+      sortedData =
+        transformTableData &&
+        transformTableData.length > 0 &&
+        transformTableData.sort((a, b) => a.episodeId - b.episodeId);
+      setTableData(sortedData);
+    } else {
+      sortedData =
+        transformTableData && transformTableData.length > 0 && transformTableData.sort((a, b) => a.year - b.year);
+      setTableData(sortedData);
+    }
+  };
+
   return (
     <div className="home-main">
       <div className="home-header">
@@ -37,16 +69,17 @@ export default function Home() {
           value={dropVal}
           onChange={onDropdownChange}
         />
-        <SearchBox placeholder="Type to search..." onSearch={onSearchChange} className="search-box" />
+        <SearchBox value={searchVal} placeholder="Type to search..." onChange={onSearchChange} className="search-box" />
       </div>
 
       {isLoading ? (
         <img src={LoaderImg} alt="loader-img" className="loader-img" />
       ) : (
-        <div className="movie-detail-section">
-          {getMovieList && getMovieList.length > 0 && <Table data={getMovieList} />}
-          <div className="no-movie-info">no movie selected</div>
-        </div>
+        <>
+          {transformTableData && transformTableData.length > 0 && (
+            <MovieTableDetails data={tableData || transformTableData} />
+          )}
+        </>
       )}
     </div>
   );
