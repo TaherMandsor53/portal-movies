@@ -22,6 +22,7 @@ export default function Home() {
   const isLoading = useSelector(state => state?.getMovieListReducer?.isFetching);
   const transformTableData = filterTableData(getMovieList);
 
+  //Searchbox onchange functionality
   const onSearchChange = useCallback(
     (e, searchText) => {
       const lowercasedValue = searchText.toLowerCase().trim();
@@ -43,6 +44,7 @@ export default function Home() {
     [transformTableData],
   );
 
+  //Sortby onchange functionality
   const onDropdownChange = (e, item) => {
     setDropVal(item);
     let sortedData = '';

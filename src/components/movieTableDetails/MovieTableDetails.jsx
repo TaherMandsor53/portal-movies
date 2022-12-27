@@ -23,6 +23,7 @@ export default function MovieTableDetails({ data }) {
         layoutMode={DetailsListLayoutMode.fixedColumns}
         selectionMode={SelectionMode.single}
         selection={onSelectionChange}
+        data-testid="tableComp"
       />
       <div className="movie-details">
         {rowData && rowData.length ? (
